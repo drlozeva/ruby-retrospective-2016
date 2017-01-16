@@ -1,13 +1,3 @@
-def convert_between_temperature_units(deg, from, to)
-  deg += 273.15 if from == 'C' && to == 'K'
-  deg if from == to
-  deg = (deg * 1.8) + 32 if from == 'C' && to == 'F'
-  deg -= 273.15 if from == 'K' && to == 'C'
-  deg = (deg * 1.8) - 459.67 if from == 'K' && to == 'F'
-  deg = (deg - 32) * 0.55555555555 if from == 'F' && to == 'C'
-  deg = (deg + 459.67) * 0.55555555555 if from == 'F' && to == 'K'
-  deg
-end
 BOILING = {
   'water' => 100,
   'ethanol' => 78.37,
@@ -22,9 +12,31 @@ MELTING = {
   'silver' => 961.8,
   'copper' => 1085,
 }
+def to_celsius(degrees, from)
+  case from
+  when 'C' then degrees
+  when 'K' then degrees - 273.15
+  when 'F' then (degrees - 32) / 1.8
+  end
+end
+
+def from_celsius(degrees, to)
+  case to
+  when 'C' then degrees
+  when 'K' then degrees + 273.15
+  when 'F' then degrees * 1.8 + 32
+  end
+end
+
+def convert_between_temperature_units(degrees, from, to)
+  degrees_in_celsius = to_celsius(degrees, from)
+  from_celsius(degrees_in_celsius, to)
+end
+
 def boiling_point_of_substance(substance, type_of_deg)
   convert_between_temperature_units(BOILING[substance], 'C', type_of_deg)
 end
+
 def melting_point_of_substance(substance, type_of_deg)
   convert_between_temperature_units(MELTING[substance], 'C', type_of_deg)
 end
